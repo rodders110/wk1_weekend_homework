@@ -18,6 +18,7 @@ end
 def increase_pets_sold (hash, amount)
   hash[:admin][:pets_sold] += amount
 end
+
 def stock_count(hash)
   count = hash[:pets].count()
   return count
@@ -36,7 +37,7 @@ end
 
 def find_pet_by_name (hash, name)
   for pet in hash[:pets]
-    if (pet[:name]== name)
+    if (pet[:name] == name)
       return pet
     end
   end
@@ -77,11 +78,11 @@ def customer_can_afford_pet (customer, pet)
 end
 
 def sell_pet_to_customer (hash, pet, customer)
-  if (pet != nil && customer[:cash] >= pet[:price] )
+  if (pet != nil && customer_can_afford_pet(customer, pet))
     add_pet_to_customer(customer, pet)
-    customer[:cash] -= pet[:price]
-    hash[:admin][:total_cash] += pet[:price]
-    hash[:admin][:pets_sold] += 1
+    remove_customer_cash(customer, pet[:price])
+    add_or_remove_cash(hash, pet[:price])
+    increase_pets_sold(hash, 1)
     remove_pet_by_name(hash, pet[:name])
   end
 end
